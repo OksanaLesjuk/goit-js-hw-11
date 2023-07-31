@@ -1,0 +1,31 @@
+body {
+  background-color: var(--just-white);
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+
+  color: var(--primary-text-color);
+}
+
+.link {
+  text-decoration: none;
+  transition: color var(--transition-duration-funktion);
+}
+.link:hover,
+.link:focus {
+  color: var(--nav-accent-color);
+}
+.list {
+  list-style-type: none;
+}
+
+.search-form {
+  position: fixed;
+  width: 100%;
+  background-color: cornflowerblue;
+  display: flex;
+  justify-content: center;
+
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
