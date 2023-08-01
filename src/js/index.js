@@ -1,10 +1,14 @@
 import { getPhotosService } from "./api";
 
+import SimpleLightbox from "simplelightbox";
+
+import "simplelightbox/dist/simple-lightbox.min.css";
+
 const form = document.querySelector('#search-form')
 const gallery = document.querySelector('.gallery')
 
 form.addEventListener('submit', handlerSearch)
-// const btnSearch = 
+
 
 
 
@@ -47,27 +51,34 @@ function marcupGallery({ hits }) {
     const marcup = hits.map((
         { webformatURL, largeImageURL, tags, likes, views, comments, downloads }
     ) => {
-        return `<div class="photo-card">
+        return `<a href="${largeImageURL}" class="link-lightbox"><div class="photo-card">
         <img src="${webformatURL}" alt="${tags}" loading="lazy" />
         <div class="info">
           <p class="info-item">
-            <b>${likes} Likes</b>
+            <b>Likes ${likes}</b>
           </p>
           <p class="info-item">
-            <b>${views} Views</b>
+            <b>Views ${views}</b>
           </p>
           <p class="info-item">
-            <b>${comments} Comments</b>
+            <b>Comments ${comments}</b>
           </p>
           <p class="info-item">
-            <b>${downloads} Downloads</b>
+            <b>Downloads ${downloads}</b>
           </p>
         </div>
-      </div>`
+      </div>
+      </a>`
     }).join(" ");
 
 
 
     gallery.insertAdjacentHTML('beforeend', marcup)
 
+
+    const lightbox = new SimpleLightbox('.gallery a', {
+        captions: true,
+        captionsData: 'alt',
+        captionDelay: 250,
+    });
 }
