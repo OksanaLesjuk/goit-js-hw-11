@@ -24,7 +24,7 @@ body {
 
 .gallery {
   width: 100%;
-  padding: 50px 15px;
+  padding: 50px 15px 20px 15px;
   width: 100%;
   display: flex;
   flex-wrap: wrap;
@@ -52,9 +52,24 @@ body {
 .info {
   display: flex;
   gap: 8px;
-  /* justify-content: space-around; */
+  padding: 8px 4px;
 }
 
 .info-item {
   text-align: center;
+}
+
+.load-more {
+  display: block;
+  background-color: cornflowerblue;
+  border-color: transparent;
+  padding: 8px 4px;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 16;
+  color: white;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  margin-bottom: 50px;
 }

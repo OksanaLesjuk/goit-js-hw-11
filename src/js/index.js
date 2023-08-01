@@ -6,49 +6,56 @@ import "simplelightbox/dist/simple-lightbox.min.css";
 
 const form = document.querySelector('#search-form')
 const gallery = document.querySelector('.gallery')
+const btnLoad = document.querySelector('.load-more')
+
 
 form.addEventListener('submit', handlerSearch)
+btnLoad.addEventListener('click', handlerLoad)
 
-
-
+let currentPage = 1;
+let querry = ""
 
 async function handlerSearch(evt) {
     evt.preventDefault();
 
     const { searchQuery } = evt.currentTarget.elements;
-
+    querry = searchQuery.value;
 
 
     if (evt.type === 'submit') {
         try {
-            const getPhotos = await getPhotosService(searchQuery.value);
-            console.dir(getPhotos);
+            const getPhotos = await getPhotosService(querry);
 
-            marcupGallery(getPhotos);
-
+            gallery.insertAdjacentHTML('beforeend', marcupGallery(getPhotos));
+            createLightbox();
 
 
         }
-
-
         catch (err) {
             console.log(err);
         }
     }
 }
 
+async function handlerLoad() {
+    currentPage += 1;
 
-// webformatURL - посилання на маленьке зображення для списку карток.
-// largeImageURL - посилання на велике зображення.
-// tags - рядок з описом зображення. Підійде для атрибуту alt.
-// likes - кількість лайків.
-// views - кількість переглядів.
-// comments - кількість коментарів.
-// downloads - кількість завантажень.
+
+    try {
+        const getPhotos = await getPhotosService(querry, currentPage);
+        gallery.insertAdjacentHTML('beforeend', marcupGallery(getPhotos));
+        createLightbox();
+
+    }
+    catch (err) {
+        console.log(err);
+    }
+}
+
+
+
 function marcupGallery({ hits }) {
-
-
-    const marcup = hits.map((
+    return hits.map((
         { webformatURL, largeImageURL, tags, likes, views, comments, downloads }
     ) => {
         return `<a href="${largeImageURL}" class="link-lightbox"><div class="photo-card">
@@ -71,11 +78,9 @@ function marcupGallery({ hits }) {
       </a>`
     }).join(" ");
 
+}
 
-
-    gallery.insertAdjacentHTML('beforeend', marcup)
-
-
+function createLightbox() {
     const lightbox = new SimpleLightbox('.gallery a', {
         captions: true,
         captionsData: 'alt',

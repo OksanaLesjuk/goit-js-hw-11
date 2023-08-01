@@ -5,7 +5,7 @@ const BAZE_URL = 'https://pixabay.com/api/'
 
 
 
-const getPhotosService = async (value) => {
+const getPhotosService = async (value, page) => {
     try {
         const { data } = await axios(BAZE_URL, {
             params: {
@@ -14,6 +14,7 @@ const getPhotosService = async (value) => {
                 image_type: "photo",
                 orientation: "horizontal",
                 safesearch: "true",
+                page: page,
                 per_page: 40,
             }
         });
