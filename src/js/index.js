@@ -1,9 +1,8 @@
 import { getPhotosService } from "./api";
-
 import SimpleLightbox from "simplelightbox";
-
 import "simplelightbox/dist/simple-lightbox.min.css";
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+
 
 const form = document.querySelector('#search-form')
 const gallery = document.querySelector('.gallery')
@@ -16,8 +15,7 @@ let currentPage = 1;
 let querry = ""
 let quantityPage = null
 
-// form.addEventListener('submit', handlerSearch)
-// btnLoad.addEventListener('click', handlerLoad)
+
 enterInput.addEventListener('focus', handlerFocusInput)
 
 btnLoad.classList.add('is-hidden')
@@ -68,7 +66,6 @@ async function handlerSearch(evt) {
 
 async function handlerLoad() {
     currentPage += 1;
-    console.log(currentPage);
     try {
         const { hits } = await getPhotosService(querry, currentPage);
 
@@ -135,3 +132,4 @@ function scrollGallery() {
         behavior: "smooth",
     });
 }
+

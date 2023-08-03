@@ -44,6 +44,7 @@ body {
 }
 
 .search-form button {
+  color: white;
   cursor: pointer;
   border-radius: 10px;
   background-color: cornflowerblue;
