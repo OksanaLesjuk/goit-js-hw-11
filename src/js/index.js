@@ -93,7 +93,8 @@ function createMarcupGallery(hits) {
     return hits.map((
         { webformatURL, largeImageURL, tags, likes, views, comments, downloads }
     ) => {
-        return `<a href="${largeImageURL}" class="link-lightbox"><div class="photo-card">
+        return `<a href="${largeImageURL}" class="link-lightbox">
+        <div class="photo-card">
         <img src="${webformatURL}" alt="${tags}" loading="lazy" />
         <div class="info">
           <p class="info-item">
