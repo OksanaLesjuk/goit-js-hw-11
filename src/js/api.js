@@ -5,7 +5,6 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 const BAZE_URL = 'https://pixabay.com/api/'
 
 
-
 const getPhotosService = async (value, page) => {
 
     const { data } = await axios(BAZE_URL, {

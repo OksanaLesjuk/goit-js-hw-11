@@ -10,7 +10,7 @@ const btnLoad = document.querySelector('.load-more')
 const enterInput = form.firstElementChild;
 const btnSearch = form.lastElementChild;
 
-
+const perPage = 40;
 let currentPage = 1;
 let querry = ""
 let quantityPage = null
@@ -51,7 +51,7 @@ async function handlerSearch(evt) {
 
             createLightbox();
 
-            quantityPage = Math.ceil(totalHits / 40);
+            quantityPage = Math.ceil(totalHits / perPage);
 
             if (currentPage < quantityPage) {
                 btnLoad.classList.remove('is-hidden');
