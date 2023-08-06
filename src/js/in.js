@@ -1,3 +1,4 @@
+//ВАРІАНТ КОДУ З INFINITIS croll
 import { getPhotosService } from "./api";
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
@@ -119,26 +120,26 @@ function scrollGallery() {
 
 
 //інфініті-скрол
-async function handlerLoad(entries, observer) {
-    try {
-        entries.forEach(entry => {
 
-            if (entry.isIntersecting) {
-                currentPage += 1;
-                createNewPage();
+const observer = new IntersectionObserver(handlerLoad, {
+    rootMargin: '100px',
+    threshold: 1.0
+});
 
-            }
-        });
-        if (currentPage === quantityPage) {
-            observer.unobserve(guard);
-            Notify.info("We're sorry, but you've reached the end of search results.");
+//колбек для обсервера 
+function handlerLoad(entries, observer) {
+
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            currentPage += 1;
+            createNewPage();
         }
-    }
-    catch (err) {
-        Notify.failure(err.message);
-        console.log(err);
-    }
+    });
 
+    if (currentPage === quantityPage) {
+        observer.unobserve(guard);
+        Notify.info("We're sorry, but you've reached the end of search results.");
+    }
 }
 
 async function createNewPage() {
@@ -157,7 +158,3 @@ async function createNewPage() {
     }
 }
 
-const observer = new IntersectionObserver(handlerLoad, {
-    rootMargin: '100px',
-    threshold: 1.0
-});

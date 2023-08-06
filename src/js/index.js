@@ -1,7 +1,6 @@
+//ВАРІАНТ КОДУ З КНОПКОЮ LOAD MORE
 import { getPhotosService } from "./api";
-
 import SimpleLightbox from "simplelightbox";
-
 import "simplelightbox/dist/simple-lightbox.min.css";
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
@@ -16,8 +15,7 @@ let currentPage = 1;
 let querry = ""
 let quantityPage = null
 
-// form.addEventListener('submit', handlerSearch)
-// btnLoad.addEventListener('click', handlerLoad)
+
 enterInput.addEventListener('focus', handlerFocusInput)
 
 btnLoad.classList.add('is-hidden')
@@ -37,8 +35,8 @@ async function handlerSearch(evt) {
     querry = searchQuery.value.trim();
 
     if (evt.type === 'submit') {
+        btnLoad.classList.add('is-hidden')
         try {
-            btnLoad.classList.add('is-hidden')
             const getPhotos = await getPhotosService(querry);
             const { hits, totalHits } = getPhotos;
 
