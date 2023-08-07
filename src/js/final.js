@@ -1,9 +1,8 @@
-//ВАРІАНТ КОДУ З INFINITIS croll
+//ВАРІАНТ КОДУ З КНОПКОЮ LOAD MORE та безкінечним скролом одночасно
 import { getPhotosService } from "./api";
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-
 
 const form = document.querySelector('#search-form');
 const gallery = document.querySelector('.gallery');
@@ -18,27 +17,28 @@ let currentPage = 1;
 let querry = "";
 let quantityPage = null;
 
-btnLoad.classList.add('is-hidden');
-btnSearch.disabled = true;
-
-enterInput.addEventListener('input', handlerFocusInput)
+enterInput.addEventListener('input', handlerInput)
 window.addEventListener('scroll', handlerTopScroll)
 btnToTop.addEventListener('click', handlerBtnToTop)
 
-function handlerFocusInput() {
+btnLoad.classList.add('is-hidden')
+btnSearch.disabled = true;
+
+function handlerInput() {
     btnSearch.disabled = false;
     form.addEventListener('submit', handlerSearch)
 }
 
 async function handlerSearch(evt) {
-    handlerFocusInput();
+    handlerInput()
     evt.preventDefault();
-    gallery.innerHTML = "";
+    gallery.innerHTML = ""
     currentPage = 1;
     const { searchQuery } = evt.currentTarget.elements;
     querry = searchQuery.value.trim();
 
     if (evt.type === 'submit') {
+        btnLoad.classList.add('is-hidden')
         try {
             const getPhotos = await getPhotosService(querry);
             const { hits, totalHits } = getPhotos;
@@ -57,26 +57,46 @@ async function handlerSearch(evt) {
             quantityPage = Math.ceil(totalHits / perPage);
 
             if (currentPage < quantityPage) {
+                btnLoad.classList.remove('is-hidden');
+                btnLoad.addEventListener('click', handlerLoad);
                 observer.observe(guard);
             }
-
         }
         catch (err) {
             Notify.failure(err.message);
-            console.log(err);
         }
+    }
+}
+
+async function handlerLoad() {
+    currentPage += 1;
+
+    try {
+        const { hits } = await getPhotosService(querry, currentPage);
+
+        gallery.insertAdjacentHTML('beforeend', createMarcupGallery(hits));
+
+        createLightbox();
+        scrollGallery();
+
+        if (currentPage === quantityPage) {
+            Notify.info("We're sorry, but you've reached the end of search results.");
+            observer.unobserve(guard);
+            btnLoad.classList.add('is-hidden');
+        }
+    }
+    catch (err) {
+        Notify.failure(err.message);
     }
 }
 
 
 
-//розмітка для отриманих фото від бекенду
 function createMarcupGallery(hits) {
     return hits.map((
         { webformatURL, largeImageURL, tags, likes, views, comments, downloads }
     ) => {
-        return `<a href="${largeImageURL}" class="link-lightbox">
-        <div class="photo-card">
+        return `<a href="${largeImageURL}" class="link-lightbox"><div class="photo-card">
         <img src="${webformatURL}" alt="${tags}" loading="lazy" />
         <div class="info">
           <p class="info-item">
@@ -95,10 +115,9 @@ function createMarcupGallery(hits) {
       </div>
       </a>`
     }).join(" ");
+
 }
 
-
-//для перегляду фото
 function createLightbox() {
     const lightbox = new SimpleLightbox('.gallery a', {
         captions: true,
@@ -107,23 +126,20 @@ function createLightbox() {
     });
     lightbox.refresh();
 }
-
-
 // для автоматичної прокрутки сторінки при завантаженні нової партії фото 
-// function scrollGallery() {
-//     const { height: cardHeight } = document
-//         .querySelector(".gallery")
-//         .firstElementChild.getBoundingClientRect();
+function scrollGallery() {
+    const { height: cardHeight } = document
+        .querySelector(".gallery")
+        .firstElementChild.getBoundingClientRect();
 
-//     window.scrollBy({
-//         top: cardHeight * 2,
-//         behavior: "smooth",
-//     });
-// }
+    window.scrollBy({
+        top: cardHeight * 2,
+        behavior: "smooth",
+    });
+}
 
 
 //інфініті-скрол
-
 const observer = new IntersectionObserver(handlerInfinitiLoad, {
     rootMargin: '300px',
     threshold: 1.0
@@ -134,17 +150,24 @@ function handlerInfinitiLoad(entries, observer) {
 
     entries.forEach(entry => {
         if (entry.isIntersecting) {
+            console.log(entry);
             currentPage += 1;
             createNewPage();
         }
     });
 
-    if (currentPage === quantityPage) {
-        observer.unobserve(guard);
+    if (currentPage < quantityPage) {
 
-        Notify.info("We're sorry, but you've reached the end of search results.");
+        btnLoad.classList.remove('is-hidden');
+        btnLoad.addEventListener('click', handlerLoad);
+        observer.observe(guard);
     }
 
+    if (currentPage === quantityPage) {
+        observer.unobserve(guard);
+        btnLoad.classList.add('is-hidden');
+        Notify.info("We're sorry, but you've reached the end of search results.");
+    }
 }
 
 async function createNewPage() {
@@ -154,7 +177,7 @@ async function createNewPage() {
         gallery.insertAdjacentHTML('beforeend', createMarcupGallery(hits));
 
         createLightbox();
-        // scrollGallery();  
+
     }
     catch (err) {
         Notify.failure(err.message);

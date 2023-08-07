@@ -108,21 +108,54 @@ body {
 .load-more {
   display: block;
   background-color: cornflowerblue;
-  padding: 10px 16px;
+  padding: 10px 5px;
   margin-left: auto;
   margin-right: auto;
-  font-size: 20;
-  color: white;
+
   font-family: 'Roboto', sans-serif;
   font-weight: 400;
-  font-style: normal;
+  color: white;
+  font-style: inherit;
   margin-bottom: 50px;
   cursor: pointer;
   border: 1px solid transparent;
-  border-radius: 30px;
+  background-color: gray;
+  border-radius: 10px;
   transition: background-color var(--transition-duration-funktion);
 }
+
 .load-more:hover,
 .load-more:focus {
   background-color: dodgerblue;
+}
+
+.btn-to-top {
+  display: none;
+}
+
+.btn-to-top.visible {
+  display: block;
+
+  padding: 10px 22px;
+  background-color: gray;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  font-style: inherit;
+  color: white;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  margin-bottom: 20px;
+  transition: background-color var(--transition-duration-funktion);
+}
+.btn-to-top.visible:hover,
+.btn-to-top.visible:focus {
+  background-color: dodgerblue;
+}
+
+.btn-wrapper {
+  position: fixed;
+  z-index: 1000;
+  right: 100px;
+  bottom: 100px;
 }
